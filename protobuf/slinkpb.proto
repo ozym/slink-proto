@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package slinkpb;
+
+option go_package = "slinkpb";
+
+message Timestamp {
+  int64 nanoseconds = 1;
+}
+
+message Sample {
+  Timestamp epoch = 1;
+  int32 value = 2;
+}
+
+message Packet {
+  string network  = 1;
+  string station  = 2;
+  string location = 3;
+  string channel  = 4;
+
+  Timestamp start = 5;
+  Timestamp end = 6;
+
+  int32 length = 7;
+  float sps = 8;
+
+  repeated Sample samples = 9;
+}
+
+message Selection {
+  string streams = 1;
+  string selectors = 2;
+}
+
+service SeedLink {
+  rpc Stream(Selection) returns (stream Packet) {}
+}
